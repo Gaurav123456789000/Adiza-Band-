@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Adiza — The Band</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --gold: #d9a94a;
+        --gold-light: #ffd98a;
+        --ink: #fff4de;
+        --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        min-height: 100svh;
+        margin: 0;
+        color: var(--ink);
+        background-image: url("assets/adiza-hero.png");
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding: 14px 16px;
+        font-family: "Cormorant Garamond", "Times New Roman", Georgia, serif;
+        color: var(--ink);
+      }
+
+      .nav-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: clamp(14px, 2.5vw, 32px);
+        width: 100%;
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+
+      .nav-bar {
+        --mx: 50%;
+        --my: 50%;
+        --light-opacity: 0;
+        position: relative;
+        isolation: isolate;
+        display: flex;
+        flex: 0 0 auto;
+        min-width: 0;
+        align-items: center;
+        justify-content: center;
+        width: max-content;
+        height: 60px;
+        padding: 0 8px;
+        border-radius: 9999px;
+      }
+
+      .nav-layer {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+      }
+
+      .nav-lens {
+        z-index: 0;
+        overflow: hidden;
+        -webkit-backdrop-filter: blur(10px) saturate(1.3);
+        backdrop-filter: blur(10px) saturate(1.3);
+      }
+
+      .nav-tint {
+        z-index: 1;
+        background: linear-gradient(180deg, rgb(34 24 14 / 70%), rgb(10 7 4 / 84%));
+      }
+
+      .nav-light {
+        z-index: 2;
+        opacity: var(--light-opacity);
+        background: radial-gradient(
+          240px circle at var(--mx) var(--my),
+          rgb(255 214 120 / 48%) 0%,
+          rgb(230 170 60 / 22%) 38%,
+          transparent 70%
+        );
+        transition: opacity 220ms ease;
+      }
+
+      .nav-edge {
+        z-index: 3;
+        box-shadow:
+          0 10px 30px rgb(0 0 0 / 45%),
+          0 0 0 1px rgb(217 169 74 / 42%),
+          inset 0 1px 0 rgb(255 236 190 / 58%),
+          inset 0 -1px 0 rgb(255 190 90 / 38%),
+          inset 0 0 18px 2px rgb(255 200 100 / 14%);
+      }
+
+      .logo,
+      .nav-primary,
+      .burger {
+        position: relative;
+        z-index: 4;
+      }
+
+      .logo {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        text-decoration: none;
+      }
+
+      .logo img {
+        display: block;
+        width: 116px;
+        max-height: 52px;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 8px rgb(0 0 0 / 55%));
+      }
+
+      .nav-primary {
+        display: flex;
+      }
+
+      .nav-links {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .nav-link {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        height: 40px;
+        padding: 0 12px;
+        border-radius: 9999px;
+        color: rgb(255 244 222 / 82%);
+        font-family: inherit;
+        font-size: 1.0625rem;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        transition:
+          color 180ms ease,
+          text-shadow 180ms ease;
+      }
+
+      .nav-link[aria-current="page"] {
+        color: #fffaf0;
+        text-shadow: 0 0 12px rgb(255 200 100 / 60%);
+      }
+
+      .nav-link:focus-visible {
+        outline: 2px solid rgb(255 217 138 / 80%);
+        outline-offset: 2px;
+      }
+
+      .nav-indicator {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        z-index: 0;
+        width: 150px;
+        height: 40px;
+        margin-top: -20px;
+        border-radius: 9999px;
+        background:
+          radial-gradient(120% 140% at 50% 0%, rgb(255 226 150 / 55%), transparent 60%),
+          linear-gradient(180deg, rgb(255 205 100 / 38%), rgb(184 132 42 / 26%));
+        box-shadow:
+          inset 0 0 0 1px rgb(255 222 150 / 62%),
+          inset 0 1px 0 rgb(255 244 210 / 75%),
+          inset 0 0 16px 3px rgb(255 200 90 / 38%),
+          0 0 22px rgb(230 170 60 / 42%);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(var(--indicator-x, 0px)) scaleX(var(--indicator-scale, 1));
+        transform-origin: left center;
+      }
+
+      .nav-indicator[data-ready="true"] {
+        opacity: 1;
+        transition:
+          transform 220ms var(--ease-out),
+          opacity 160ms ease;
+      }
+
+      .burger {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 8px;
+        border: 0;
+        border-radius: 9999px;
+        background: rgb(255 200 100 / 14%);
+        box-shadow: inset 0 0 0 1px rgb(255 222 150 / 42%);
+        color: inherit;
+        cursor: pointer;
+      }
+
+      .burger:focus-visible {
+        outline: 2px solid rgb(255 217 138 / 80%);
+        outline-offset: 2px;
+      }
+
+      .burger svg {
+        display: block;
+        width: 20px;
+        height: 20px;
+      }
+
+      .burger-close-icon {
+        opacity: 0;
+      }
+
+      .main {
+        display: flex;
+        flex: 1;
+      }
+
+      .hero {
+        display: grid;
+        flex: 1;
+        min-height: 0;
+        place-items: center;
+        padding: 0 1rem;
+        text-align: center;
+      }
+
+      .hero-copy {
+        width: min(100%, 70rem);
+        font-family: "Cormorant Garamond", Georgia, serif;
+        transform: translateY(-6vh);
+      }
+
+      .hero-copy h1 {
+        margin: 0 0 1rem;
+        color: #fff4de;
+        font-size: clamp(3.5rem, 8vw, 6rem);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        line-height: 1.05;
+        text-shadow: 0 2px 24px rgb(0 0 0 / 60%);
+      }
+
+      .hero-copy p {
+        position: relative;
+        margin: 0 0 2rem;
+        color: rgb(255 244 222 / 90%);
+        font-size: clamp(1.25rem, 2.5vw, 1.9rem);
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-shadow: 0 1px 12px rgb(0 0 0 / 70%);
+      }
+
+      .hero-subtitle-measure {
+        visibility: hidden;
+      }
+
+      .hero-subtitle-typing {
+        position: absolute;
+        inset: 0;
+      }
+
+      .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0.8rem 1.9rem;
+        border-radius: 0.4rem;
+        background: var(--gold);
+        color: #17100a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      @media (max-width: 1120px) and (min-width: 881px) {
+        .nav-bar {
+          padding-inline: 7px;
+        }
+
+        .nav-link {
+          padding-inline: 8px;
+          font-size: 0.98rem;
+        }
+      }
+
+      @media (max-width: 880px) {
+        .navbar {
+          padding: 12px 14px;
+        }
+
+        .nav-wrap {
+          justify-content: space-between;
+        }
+
+        .nav-bar {
+          flex: 0 0 48px;
+          width: 48px;
+          justify-content: center;
+          height: 48px;
+          padding: 0;
+        }
+
+        .logo img {
+          width: 104px;
+          max-height: 48px;
+        }
+
+        .burger {
+          display: inline-flex;
+          width: 44px;
+          height: 44px;
+          margin: 0;
+          background: transparent;
+          box-shadow: none;
+        }
+
+        .nav-primary {
+          position: static;
+        }
+
+        .nav-indicator {
+          display: none;
+        }
+
+        .nav-links {
+          position: absolute;
+          z-index: 5;
+          top: calc(100% + 10px);
+          right: 0;
+          left: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 4px;
+          width: min(420px, calc(100vw - 28px));
+          padding: 10px;
+          border-radius: 24px;
+          background: linear-gradient(180deg, rgb(34 24 14 / 92%), rgb(10 7 4 / 96%));
+          box-shadow:
+            0 16px 40px rgb(0 0 0 / 50%),
+            0 0 0 1px rgb(217 169 74 / 38%),
+            inset 0 1px 0 rgb(255 236 190 / 42%);
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(-8px) scale(0.98);
+          transform-origin: top center;
+          visibility: hidden;
+          transition:
+            opacity 200ms var(--ease-out),
+            transform 200ms var(--ease-out),
+            visibility 0s linear 200ms;
+        }
+
+        .nav-links.open {
+          opacity: 1;
+          pointer-events: auto;
+          transform: translateY(0) scale(1);
+          visibility: visible;
+          transition-delay: 0s;
+        }
+
+        .nav-link {
+          justify-content: flex-start;
+          width: 100%;
+          height: 48px;
+          padding: 0 20px;
+          border-radius: 9999px;
+          font-size: 1.15rem;
+        }
+
+        .nav-link[aria-current="page"] {
+          background:
+            radial-gradient(120% 140% at 50% 0%, rgb(255 226 150 / 45%), transparent 60%),
+            linear-gradient(180deg, rgb(255 205 100 / 30%), rgb(184 132 42 / 20%));
+          box-shadow:
+            inset 0 0 0 1px rgb(255 222 150 / 50%),
+            inset 0 0 14px 2px rgb(255 200 90 / 30%);
+        }
+
+        .hero-copy {
+          transform: translateY(-5vh);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .navbar {
+          padding-left: max(12px, env(safe-area-inset-left));
+          padding-right: max(12px, env(safe-area-inset-right));
+        }
+
+        .logo img {
+          width: clamp(92px, 28vw, 104px);
+        }
+
+        .hero {
+          padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .hero-copy {
+          transform: translateY(-8vh);
+        }
+
+        .hero-copy h1 {
+          margin-bottom: 0.75rem;
+          font-size: clamp(3rem, 12vw, 4.25rem);
+        }
+
+        .hero-copy p {
+          max-width: 24ch;
+          margin: 0 auto 1.5rem;
+          font-size: clamp(1.05rem, 4.6vw, 1.4rem);
+          letter-spacing: 0.045em;
+          line-height: 1.25;
+        }
+
+        body {
+          background-position: 58% center;
+        }
+      }
+
+      @media (max-width: 880px) and (max-height: 620px) {
+        .hero-copy {
+          transform: translateY(-2vh);
+        }
+
+        .hero-copy h1 {
+          font-size: clamp(2.5rem, 8vw, 3.5rem);
+        }
+
+        .hero-copy p {
+          margin-bottom: 1rem;
+          font-size: 1.1rem;
+        }
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .nav-link:hover {
+          color: #fff;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .nav-light,
+        .nav-indicator[data-ready="true"],
+        .nav-link,
+        .burger svg {
+          transition: none;
+        }
+      }
+
+      @media (max-width: 880px) and (prefers-reduced-motion: reduce) {
+        .nav-links {
+          transform: none;
+          transition:
+            opacity 120ms ease,
+            visibility 0s linear 120ms;
+        }
+
+        .nav-links.open {
+          transform: none;
+          transition-delay: 0s;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="nav-wrap">
+        <a href="#home" class="logo" aria-label="Adiza home">
+          <img src="assets/adiza-logo.webp" alt="Adiza">
+        </a>
+
+        <div class="nav-bar">
+          <span class="nav-layer nav-lens" aria-hidden="true"></span>
+          <span class="nav-layer nav-tint" aria-hidden="true"></span>
+          <span class="nav-layer nav-light" aria-hidden="true"></span>
+          <span class="nav-layer nav-edge" aria-hidden="true"></span>
+
+          <nav class="nav-primary" aria-label="Main navigation">
+            <ul class="nav-links" id="primary-navigation">
+              <li class="nav-indicator" aria-hidden="true" data-ready="false"></li>
+              <li><a class="nav-link" href="#home" aria-current="page">Home</a></li>
+              <li><a class="nav-link" href="#about">About Band</a></li>
+              <li><a class="nav-link" href="#services">Services</a></li>
+              <li><a class="nav-link" href="#gallery">Media Gallery</a></li>
+              <li><a class="nav-link" href="#bookings">Bookings</a></li>
+              <li><a class="nav-link" href="#news">News &amp; Media</a></li>
+              <li><a class="nav-link" href="#contact">Contact Us</a></li>
+            </ul>
+          </nav>
+
+          <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-navigation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path class="burger-open-icon" d="M4 7h16M4 12h16M4 17h16"></path>
+              <path class="burger-close-icon" d="M6 6l12 12M18 6L6 18"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main" id="home">
+      <section class="hero" aria-label="Adiza band introduction">
+        <div class="hero-copy">
+          <h1>Adiza</h1>
+          <p aria-label="Hindi – Sufi – Bollywood Live Band">
+            <span class="hero-subtitle-measure" aria-hidden="true">Hindi – Sufi – Bollywood Live Band</span>
+            <span class="hero-subtitle-typing" aria-hidden="true"></span>
+          </p>
+          <a class="hero-cta" href="#bookings">Book Now</a>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const navBar = document.querySelector(".nav-bar");
+      const navList = document.querySelector(".nav-links");
+      const navLinks = [...navList.querySelectorAll(".nav-link")];
+      const indicator = document.querySelector(".nav-indicator");
+      const burger = document.querySelector(".burger");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const subtitle = document.querySelector(".hero-subtitle-typing");
+      const subtitleText = "Hindi – Sufi – Bollywood Live Band";
+      let subtitleIndex = 0;
+      let deletingSubtitle = false;
+      let subtitleTimer;
+      let activeLink = navList.querySelector('[aria-current="page"]') ?? navLinks[0];
+      let hoveredLink = null;
+      let indicatorFrame = 0;
+
+      function typeSubtitle() {
+        if (deletingSubtitle) {
+          subtitleIndex -= 1;
+          subtitle.textContent = subtitleText.slice(0, subtitleIndex);
+          if (subtitleIndex === 0) {
+            deletingSubtitle = false;
+            subtitleTimer = window.setTimeout(typeSubtitle, 500);
+            return;
+          }
+          subtitleTimer = window.setTimeout(typeSubtitle, 35);
+          return;
+        }
+
+        subtitleIndex += 1;
+        subtitle.textContent = subtitleText.slice(0, subtitleIndex);
+        if (subtitleIndex === subtitleText.length) {
+          deletingSubtitle = true;
+          subtitleTimer = window.setTimeout(typeSubtitle, 1400);
+          return;
+        }
+        subtitleTimer = window.setTimeout(typeSubtitle, 70);
+      }
+
+      if (reduceMotion.matches) {
+        subtitle.textContent = subtitleText;
+      } else {
+        subtitleTimer = window.setTimeout(typeSubtitle, 250);
+      }
+
+      reduceMotion.addEventListener("change", (event) => {
+        window.clearTimeout(subtitleTimer);
+        if (event.matches) {
+          subtitle.textContent = subtitleText;
+          return;
+        }
+        subtitleIndex = 0;
+        deletingSubtitle = false;
+        subtitle.textContent = "";
+        subtitleTimer = window.setTimeout(typeSubtitle, 250);
+      });
+
+      function positionIndicator(link) {
+        if (!link || window.matchMedia("(max-width: 880px)").matches) return;
+        const listRect = navList.getBoundingClientRect();
+        const linkRect = link.getBoundingClientRect();
+        indicator.style.setProperty("--indicator-x", `${linkRect.left - listRect.left}px`);
+        indicator.style.setProperty("--indicator-scale", `${linkRect.width / 150}`);
+        if (!indicator.dataset.ready || indicator.dataset.ready === "false") {
+          requestAnimationFrame(() => {
+            indicator.dataset.ready = "true";
+          });
+        }
+      }
+
+      positionIndicator(activeLink);
+      window.addEventListener("resize", () => positionIndicator(hoveredLink ?? activeLink));
+      if ("ResizeObserver" in window) {
+        const navObserver = new ResizeObserver(() => positionIndicator(hoveredLink ?? activeLink));
+        navObserver.observe(navList);
+      }
+      document.fonts?.ready.then(() => positionIndicator(hoveredLink ?? activeLink));
+
+      navLinks.forEach((link) => {
+        link.addEventListener("pointerenter", (event) => {
+          if (event.pointerType === "mouse" || event.pointerType === "pen") {
+            hoveredLink = link;
+            positionIndicator(link);
+          }
+        });
+
+        link.addEventListener("focus", () => {
+          hoveredLink = link;
+          positionIndicator(link);
+        });
+
+        link.addEventListener("click", () => {
+          navLinks.forEach((item) => item.removeAttribute("aria-current"));
+          link.setAttribute("aria-current", "page");
+          activeLink = link;
+          hoveredLink = null;
+          positionIndicator(activeLink);
+          setMenuOpen(false);
+        });
+      });
+
+      navList.addEventListener("pointerleave", () => {
+        hoveredLink = null;
+        positionIndicator(activeLink);
+      });
+
+      navList.addEventListener("focusout", (event) => {
+        if (!navList.contains(event.relatedTarget)) {
+          hoveredLink = null;
+          positionIndicator(activeLink);
+        }
+      });
+
+      function setMenuOpen(isOpen) {
+        navList.classList.toggle("open", isOpen);
+        burger.setAttribute("aria-expanded", String(isOpen));
+        burger.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+        burger.querySelector(".burger-open-icon").style.opacity = isOpen ? "0" : "1";
+        burger.querySelector(".burger-close-icon").style.opacity = isOpen ? "1" : "0";
+      }
+
+      burger.addEventListener("click", () => {
+        setMenuOpen(burger.getAttribute("aria-expanded") !== "true");
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && burger.getAttribute("aria-expanded") === "true") {
+          setMenuOpen(false);
+          burger.focus();
+        }
+      });
+
+      const lightSpring = {
+        stiffness: 100,
+        damping: 10,
+        mass: 1,
+      };
+      let lightX = 0;
+      let lightY = 0;
+      let targetX = 0;
+      let targetY = 0;
+      let velocityX = 0;
+      let velocityY = 0;
+      let lastFrameTime = 0;
+      let lightFrame = 0;
+
+      function animateLight(time) {
+        const elapsed = Math.min((time - lastFrameTime) / 1000 || 1 / 60, 1 / 30);
+        lastFrameTime = time;
+
+        const accelerationX = (lightSpring.stiffness * (targetX - lightX) - lightSpring.damping * velocityX) / lightSpring.mass;
+        const accelerationY = (lightSpring.stiffness * (targetY - lightY) - lightSpring.damping * velocityY) / lightSpring.mass;
+        velocityX += accelerationX * elapsed;
+        velocityY += accelerationY * elapsed;
+        lightX += velocityX * elapsed;
+        lightY += velocityY * elapsed;
+
+        navBar.style.setProperty("--mx", `${lightX}px`);
+        navBar.style.setProperty("--my", `${lightY}px`);
+
+        const unsettled = Math.hypot(targetX - lightX, targetY - lightY) > 0.5 || Math.hypot(velocityX, velocityY) > 0.5;
+        if (unsettled) {
+          lightFrame = requestAnimationFrame(animateLight);
+        } else {
+          lightX = targetX;
+          lightY = targetY;
+          navBar.style.setProperty("--mx", `${lightX}px`);
+          navBar.style.setProperty("--my", `${lightY}px`);
+          lightFrame = 0;
+        }
+      }
+
+      navBar.addEventListener("pointermove", (event) => {
+        if (reduceMotion.matches || (event.pointerType !== "mouse" && event.pointerType !== "pen")) return;
+        const rect = navBar.getBoundingClientRect();
+        targetX = event.clientX - rect.left;
+        targetY = event.clientY - rect.top;
+        navBar.style.setProperty("--light-opacity", "1");
+        if (!lightFrame) {
+          lastFrameTime = 0;
+          lightFrame = requestAnimationFrame(animateLight);
+        }
+      });
+
+      navBar.addEventListener("pointerleave", () => {
+        navBar.style.setProperty("--light-opacity", "0");
+      });
+    </script>
+  </body>
+</html>
