@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600&display=swap" rel="stylesheet">
     <style>
       :root {
         --gold: #d9a94a;
@@ -279,6 +280,11 @@
         text-shadow: 0 1px 12px rgb(0 0 0 / 70%);
       }
 
+      .hero-copy p[lang="hi"] {
+        font-family: "Noto Serif Devanagari", "Cormorant Garamond", serif;
+        letter-spacing: 0.02em;
+      }
+
       .hero-subtitle-measure {
         visibility: hidden;
       }
@@ -510,11 +516,9 @@
             <ul class="nav-links" id="primary-navigation">
               <li class="nav-indicator" aria-hidden="true" data-ready="false"></li>
               <li><a class="nav-link" href="#home" aria-current="page">Home</a></li>
-              <li><a class="nav-link" href="#about">About Band</a></li>
+              <li><a class="nav-link" href="about.html">About Band</a></li>
               <li><a class="nav-link" href="#services">Services</a></li>
               <li><a class="nav-link" href="#gallery">Media Gallery</a></li>
-              <li><a class="nav-link" href="#bookings">Bookings</a></li>
-              <li><a class="nav-link" href="#news">News &amp; Media</a></li>
               <li><a class="nav-link" href="#contact">Contact Us</a></li>
             </ul>
           </nav>
@@ -533,13 +537,14 @@
       <section class="hero" aria-label="Adiza band introduction">
         <div class="hero-copy">
           <h1>Adiza</h1>
-          <p aria-label="Hindi – Sufi – Bollywood Live Band">
-            <span class="hero-subtitle-measure" aria-hidden="true">Hindi – Sufi – Bollywood Live Band</span>
-            <span class="hero-subtitle-typing" aria-hidden="true"></span>
+          <p lang="en" aria-label="Hindi Sufi Bollywood Live Band">
+            <span class="hero-subtitle-measure" aria-hidden="true">Hindi Sufi Bollywood Live Band</span>
+            <span class="hero-subtitle-typing" aria-hidden="true">Hindi Sufi Bollywood Live Band</span>
           </p>
           <a class="hero-cta" href="#bookings">Book Now</a>
         </div>
       </section>
+
     </main>
 
     <script>
@@ -549,8 +554,16 @@
       const indicator = document.querySelector(".nav-indicator");
       const burger = document.querySelector(".burger");
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const subtitleRegion = document.querySelector(".hero-copy p");
       const subtitle = document.querySelector(".hero-subtitle-typing");
-      const subtitleText = "Hindi – Sufi – Bollywood Live Band";
+      const subtitleLines = [
+        { text: "Hindi Sufi Bollywood Live Band", lang: "en" },
+        { text: "हिंदी सूफ़ी बॉलीवुड लाइव बैंड", lang: "hi" },
+      ];
+      let subtitleLineIndex = 0;
+      let subtitleText = subtitleLines[subtitleLineIndex].text;
+      const segmenter = "Segmenter" in Intl ? new Intl.Segmenter(undefined, { granularity: "grapheme" }) : null;
+      let subtitleCharacters = segmentSubtitle(subtitleText);
       let subtitleIndex = 0;
       let deletingSubtitle = false;
       let subtitleTimer;
@@ -558,12 +571,23 @@
       let hoveredLink = null;
       let indicatorFrame = 0;
 
+      function segmentSubtitle(text) {
+        return segmenter
+          ? [...segmenter.segment(text)].map(({ segment }) => segment)
+          : Array.from(text);
+      }
+
       function typeSubtitle() {
         if (deletingSubtitle) {
           subtitleIndex -= 1;
-          subtitle.textContent = subtitleText.slice(0, subtitleIndex);
+          subtitle.textContent = subtitleCharacters.slice(0, subtitleIndex).join("");
           if (subtitleIndex === 0) {
             deletingSubtitle = false;
+            subtitleLineIndex = (subtitleLineIndex + 1) % subtitleLines.length;
+            subtitleText = subtitleLines[subtitleLineIndex].text;
+            subtitleCharacters = segmentSubtitle(subtitleText);
+            subtitleRegion.lang = subtitleLines[subtitleLineIndex].lang;
+            subtitleRegion.setAttribute("aria-label", subtitleText);
             subtitleTimer = window.setTimeout(typeSubtitle, 500);
             return;
           }
@@ -572,8 +596,8 @@
         }
 
         subtitleIndex += 1;
-        subtitle.textContent = subtitleText.slice(0, subtitleIndex);
-        if (subtitleIndex === subtitleText.length) {
+        subtitle.textContent = subtitleCharacters.slice(0, subtitleIndex).join("");
+        if (subtitleIndex === subtitleCharacters.length) {
           deletingSubtitle = true;
           subtitleTimer = window.setTimeout(typeSubtitle, 1400);
           return;
@@ -584,6 +608,7 @@
       if (reduceMotion.matches) {
         subtitle.textContent = subtitleText;
       } else {
+        subtitle.textContent = "";
         subtitleTimer = window.setTimeout(typeSubtitle, 250);
       }
 
@@ -593,6 +618,11 @@
           subtitle.textContent = subtitleText;
           return;
         }
+        subtitleLineIndex = 0;
+        subtitleText = subtitleLines[subtitleLineIndex].text;
+        subtitleCharacters = segmentSubtitle(subtitleText);
+        subtitleRegion.lang = subtitleLines[subtitleLineIndex].lang;
+        subtitleRegion.setAttribute("aria-label", subtitleText);
         subtitleIndex = 0;
         deletingSubtitle = false;
         subtitle.textContent = "";
