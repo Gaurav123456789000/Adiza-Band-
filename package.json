@@ -1,0 +1,14 @@
+{
+  "name": "adiza-band-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Adiza band website and inquiry endpoint",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js",
+    "build": "node scripts/build.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
